@@ -1,0 +1,32 @@
+<h1>New channel</h1>
+<div>
+  <ul>
+    <% @selected_users.each do |user| %>
+      <li>
+        <%= user.alias %>
+        <% if user != current_user %>
+          <%= link_to "delete", delete_selected_user_path(user), method: :delete %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= simple_form_for :search_user, url: new_channel_path, method: :get do |f| %>
+  <div>
+    <%= f.input :name, label: false, placeholder: "ex : John Smith" %>
+    <button type="submit" class="btn btn-default">
+      <i class="fa fa-search"></i>
+    </button>
+  </div>
+<% end %>
+<%= simple_form_for :selected_user, url: new_channel_path, method: :get do |f| %>
+  <div>
+    <ul>
+      <% @users.each do |user| %>
+        <%= f.input :user_id, as: :hidden, input_html: {value: user.id } %>
+        <li><%= f.submit user.alias %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

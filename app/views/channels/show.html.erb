@@ -1,0 +1,32 @@
+<div class="wrapper-messenger">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2">
+        <p><%= link_to "Channels", new_channel_path %></p>
+        <p><%= link_to "direct messages", new_channel_path %></p>
+        <ul>
+          <% @channels.each do |channel| %>
+            <li> <%= channel.name %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="col-md-10">
+        <% if @messages %>
+          <ul>
+            <% @messages.each do |message| %>
+              <li>
+                <h1><%= message.user.alias %> </h1>
+                <p><%= message.content %></p>
+                <%= link_to "delete", channel_message_path(@channel, message)  %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+        <%= simple_form_for @message, url: channel_messages_path(@channel) do |f| %>
+          <%= f.input :content, label: false %>
+          <%= f.button :submit, 'Send' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
