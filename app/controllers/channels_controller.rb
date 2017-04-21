@@ -3,25 +3,41 @@ class ChannelsController < ApplicationController
     @message = Message.new
     @channel = Channel.find(params[:id])
     @messages = @channel.messages
-    @channels = current_user.channels
-    session[:new_channel] = [current_user.id]
+    @channels = current_user.channels.uniq
+    session[:user_ids] = [current_user.id]
   end
 
   def new
-    # session[:new_channel] = [current_user.id] unless session[:new_channel]
-    session[:new_channel] << select_params[:user_id] if params["selected_user"]
-    @selected_users = User.where(id: session[:new_channel]).reverse
-    if params["search_user"]
-      @users = User.pgsearch(search_params[:name])
+    @channel = Channel.new
+    session[:user_ids] << select_params[:user_id] if params["selected_user"]
+    @selected_users = User.selected_users(session[:user_ids])
+    @users = params["search_user"] ? User.pgsearch(search_params[:name]) : current_user.friends
+  end
+
+  def create
+    @channel = Channel.new(channel_params)
+    @selected_users = User.selected_users(session[:user_ids])
+    if @channel.save
+      Subscription.create(  channel: @channel,
+                            user: current_user,
+                            admin: true)
+      @selected_users.each do |user|
+        Subscription.create(channel: @channel,
+                            user: user)
+      end
+      redirect_to @channel
     else
-      @users = current_user.users.select{ |user| user != current_user}
+      @users = current_user.friends
+      render :new
     end
   end
 
   def delete_selected_user
-    session[:new_channel].delete(params[:id])
+    session[:user_ids].delete(params[:id])
     redirect_to new_channel_path
   end
+
+  private
 
   def search_params
     params.require(:search_user).permit(:name)
@@ -31,5 +47,8 @@ class ChannelsController < ApplicationController
     params.require(:selected_user).permit(:user_id)
   end
 
+  def channel_params
+    params.require(:channel).permit(:name)
+  end
 
 end

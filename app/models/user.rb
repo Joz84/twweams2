@@ -21,4 +21,15 @@ class User < ApplicationRecord
             },
     ignoring: :accents
 
+  def friends
+    users
+    .uniq
+    .select{ |user| user != self}
+  end
+
+  def self.selected_users(ids)
+    where(id: ids)
+    .reverse
+  end
+
 end

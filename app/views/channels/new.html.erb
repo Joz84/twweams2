@@ -1,16 +1,23 @@
 <h1>New channel</h1>
-<div>
-  <ul>
-    <% @selected_users.each do |user| %>
-      <li>
-        <%= user.alias %>
-        <% if user != current_user %>
-          <%= link_to "delete", delete_selected_user_path(user), method: :delete %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-</div>
+
+<%= simple_form_for @channel do |f| %>
+  <%= f.input :name, label: false, placeholder: "Name of the channel" %>
+  <div>
+    <ul>
+      <% @selected_users.each do |user| %>
+        <li>
+          <%= user.alias %>
+          <% if user != current_user %>
+            <%= link_to "delete", delete_selected_user_path(user), method: :delete %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <%= f.submit %>
+<% end %>
+
+<h2>Add a new friend to channel</h2>
 
 <%= simple_form_for :search_user, url: new_channel_path, method: :get do |f| %>
   <div>
@@ -20,13 +27,17 @@
     </button>
   </div>
 <% end %>
-<%= simple_form_for :selected_user, url: new_channel_path, method: :get do |f| %>
-  <div>
-    <ul>
-      <% @users.each do |user| %>
-        <%= f.input :user_id, as: :hidden, input_html: {value: user.id } %>
-        <li><%= f.submit user.alias %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+
+<div>
+  <ul>
+    <% @users.each do |user| %>
+      <li>
+        <%= simple_form_for :selected_user, url: new_channel_path, method: :get do |f| %>
+          <%= f.input :user_id, as: :hidden, input_html: {value: user.id } %>
+          <%= f.submit user.alias %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
