@@ -1,7 +1,11 @@
 <h1>New channel</h1>
 
 <%= simple_form_for @channel do |f| %>
-  <%= f.input :name, label: false, placeholder: "Name of the channel" %>
+  <% if @selected_users.size > 2 %>
+    <%= f.input :name, label: false, placeholder: "Name of the channel" %>
+  <% else %>
+    <%= f.input :name, as: :hidden, input_html: {value: @selected_users.last.alias } %>
+  <% end %>
   <div>
     <ul>
       <% @selected_users.each do |user| %>

@@ -3,7 +3,7 @@ class ChannelsController < ApplicationController
     @message = Message.new
     @channel = Channel.find(params[:id])
     @messages = @channel.messages
-    @channels = current_user.channels.uniq
+    @channels = current_user.channels
     session[:user_ids] = [current_user.id]
   end
 
@@ -15,16 +15,10 @@ class ChannelsController < ApplicationController
   end
 
   def create
-    @channel = Channel.new(channel_params)
     @selected_users = User.selected_users(session[:user_ids])
-    if @channel.save
-      Subscription.create(  channel: @channel,
-                            user: current_user,
-                            admin: true)
-      @selected_users.each do |user|
-        Subscription.create(channel: @channel,
-                            user: user)
-      end
+    @channel = Channel.new(channel_params)
+    if @selected_users.size > 1 && @channel.save
+      Subscription.init(@channel, @selected_users, current_user)
       redirect_to @channel
     else
       @users = current_user.friends

@@ -2,11 +2,18 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-2">
-        <p><%= link_to "Channels", new_channel_path %></p>
-        <p><%= link_to "direct messages", new_channel_path %></p>
+        <p><%= link_to "Create a new channel", new_channel_path %></p>
+        <h3><%= @channel.name %></h3>
+        <ul>
+          <% @channel.users.each do |user| %>
+            <% if user != current_user %>
+              <li><%= user.alias %></li>
+            <% end %>
+          <% end %>
+        </ul>
         <ul>
           <% @channels.each do |channel| %>
-            <li> <%= channel.name %></li>
+            <li> <%= link_to channel.name, channel %></li>
           <% end %>
         </ul>
       </div>
@@ -17,7 +24,9 @@
               <li>
                 <h1><%= message.user.alias %> </h1>
                 <p><%= message.content %></p>
-                <%= link_to "delete", channel_message_path(@channel, message)  %>
+                <% if message.user == current_user %>
+                  <%= link_to "delete", "#"  %>
+                <% end %>
               </li>
             <% end %>
           </ul>
