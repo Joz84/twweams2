@@ -4,10 +4,4 @@ class PagesController < ApplicationController
   def home
     @channel = Channel.first
   end
-
-  private
-
-  # def channel_params
-  #   params.require(:channel).permit(:birthdate, :male, :female)
-  # end
 end

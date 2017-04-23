@@ -1,9 +1,11 @@
 class ChannelsController < ApplicationController
+  before_action :find_channel, only: [:show, :edit, :update, :destroy]
+  before_action :find_subscriptions_and_admin, only: [:show, :edit, :update]
+  before_action :find_users, only: [:new, :edit]
+
   def show
     @message = Message.new
-    @channel = Channel.find(params[:id])
-    @messages = @channel.messages
-    @channels = current_user.channels
+    @channel.messages.each { |message| message.update(done = true) }
     session[:user_ids] = [current_user.id]
   end
 
@@ -11,19 +13,34 @@ class ChannelsController < ApplicationController
     @channel = Channel.new
     session[:user_ids] << select_params[:user_id] if params["selected_user"]
     @selected_users = User.selected_users(session[:user_ids])
-    @users = params["search_user"] ? User.pgsearch(search_params[:name]) : current_user.friends
   end
 
   def create
-    @selected_users = User.selected_users(session[:user_ids])
     @channel = Channel.new(channel_params)
+    @selected_users = User.selected_users(session[:user_ids])
     if @selected_users.size > 1 && @channel.save
-      Subscription.init(@channel, @selected_users, current_user)
+      @channel.init(@selected_users, current_user)
       redirect_to @channel
     else
       @users = current_user.friends
       render :new
     end
+  end
+
+  def edit
+  end
+
+  def update
+    if !channel_params[:name].strip.empty? && @channel.update(channel_params)
+      redirect_to edit_channel_path(@channel)
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @channel.destroy
+    redirect_to Channel.first
   end
 
   def delete_selected_user
@@ -32,6 +49,19 @@ class ChannelsController < ApplicationController
   end
 
   private
+
+  def find_channel
+    @channel = Channel.find(params[:id])
+  end
+
+  def find_subscriptions_and_admin
+    @subscriptions = !@channel.one_to_one? ? @channel.subscriptions : []
+    @admin = @channel.subscriptions.find_by(user: current_user).admin
+  end
+
+  def find_users
+    @users = params["search_user"] ? User.pgsearch(search_params[:name]) : current_user.friends
+  end
 
   def search_params
     params.require(:search_user).permit(:name)

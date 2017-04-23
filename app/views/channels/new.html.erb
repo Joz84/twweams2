@@ -9,12 +9,12 @@
   <div>
     <ul>
       <% @selected_users.each do |user| %>
-        <li>
-          <%= user.alias %>
-          <% if user != current_user %>
+        <% if user != current_user %>
+          <li>
+            <%= user.alias %>
             <%= link_to "delete", delete_selected_user_path(user), method: :delete %>
-          <% end %>
-        </li>
+          </li>
+        <% end %>
       <% end %>
     </ul>
   </div>

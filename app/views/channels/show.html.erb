@@ -4,23 +4,26 @@
       <div class="col-md-2">
         <p><%= link_to "Create a new channel", new_channel_path %></p>
         <h3><%= @channel.name %></h3>
+        <% if @admin %>
+          <%= link_to "edit", edit_channel_path(@channel) %>
+        <% end %>
         <ul>
-          <% @channel.users.each do |user| %>
-            <% if user != current_user %>
-              <li><%= user.alias %></li>
+          <% @subscriptions.each do |subscription| %>
+            <% if subscription.user != current_user %>
+              <li><%= subscription.user.alias %></li>
             <% end %>
           <% end %>
         </ul>
         <ul>
-          <% @channels.each do |channel| %>
+          <% current_user.channels.each do |channel| %>
             <li> <%= link_to channel.name, channel %></li>
           <% end %>
         </ul>
       </div>
       <div class="col-md-10">
-        <% if @messages %>
+        <% if @channel.messages %>
           <ul>
-            <% @messages.each do |message| %>
+            <% @channel.messages.each do |message| %>
               <li>
                 <h1><%= message.user.alias %> </h1>
                 <p><%= message.content %></p>

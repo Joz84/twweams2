@@ -4,8 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  has_many :subscriptions
-  has_many :messages
+  has_many :subscriptions, dependent: :destroy
+  has_many :messages, dependent: :destroy
   has_many :channels, through: :subscriptions
   has_many :users, through: :channels
 

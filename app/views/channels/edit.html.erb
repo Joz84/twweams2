@@ -1,0 +1,96 @@
+<h3><%= link_to @channel.name, @channel %></h3>
+<% unless @channel.one_to_one? %>
+  <%= simple_form_for @channel do |f| %>
+    <%= f.input :name, label: false, placeholder: @channel.name %>
+    <%= f.submit "change the name" %>
+  <% end %>
+<% end %>
+<ul>
+  <% @subscriptions.each do |subscription| %>
+    <% if subscription.user != current_user %>
+      <li>
+        <%= subscription.user.alias %>
+        <% if @admin && @subscriptions.size > 2 %>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=<%= "##{subscription.user.alias}" %> >
+            Delete
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade" id=<%= "#{subscription.user.alias}" %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                </div>
+                <div class="modal-body">
+                  Are you sure! Do you want delete <%= subscription.user.alias %>
+                </div>
+                <div class="modal-footer">
+                  <%= link_to "delete", channel_subscription_path(@channel, subscription), method: :delete %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+  Delete the channel <%= @channel.name %>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+      </div>
+      <div class="modal-body">
+        Are you sure! Do you want delete the channel <%=  @channel.name %>
+      </div>
+      <div class="modal-footer">
+        <%= link_to "delete the channel #{@channel.name}", @channel, method: :delete  %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h2>Add a new friend to channel</h2>
+
+<%= simple_form_for :search_user, url: edit_channel_path(@channel), method: :get do |f| %>
+  <div>
+    <%= f.input :name, label: false, placeholder: "ex : John Smith" %>
+    <button type="submit" class="btn btn-default">
+      <i class="fa fa-search"></i>
+    </button>
+  </div>
+<% end %>
+
+<div>
+  <ul>
+    <% @users.each do |user| %>
+      <li>
+        <%= simple_form_for :selected_user, url: channel_subscriptions_path(@channel), method: :post do |f| %>
+          <%= f.input :user_id, as: :hidden, input_html: {value: user.id } %>
+          <%= f.submit user.alias %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>
