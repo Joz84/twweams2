@@ -1,4 +1,4 @@
-<h3><%= link_to @channel.name, @channel %></h3>
+<h3><%= link_to @channel.default_name(current_user), @channel %></h3>
 <% unless @channel.one_to_one? %>
   <%= simple_form_for @channel do |f| %>
     <%= f.input :name, label: false, placeholder: @channel.name %>
@@ -47,7 +47,7 @@
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-  Delete the channel <%= @channel.name %>
+  Delete the channel <%= @channel.default_name(current_user) %>
 </button>
 
 <!-- Modal -->
@@ -61,10 +61,10 @@
         <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
       </div>
       <div class="modal-body">
-        Are you sure! Do you want delete the channel <%=  @channel.name %>
+        Are you sure! Do you want delete the channel <%=  @channel.default_name(current_user) %>
       </div>
       <div class="modal-footer">
-        <%= link_to "delete the channel #{@channel.name}", @channel, method: :delete  %>
+        <%= link_to "delete the channel #{@channel.default_name(current_user)}", @channel, method: :delete  %>
       </div>
     </div>
   </div>

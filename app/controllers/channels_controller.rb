@@ -1,11 +1,10 @@
 class ChannelsController < ApplicationController
   before_action :find_channel, only: [:show, :edit, :update, :destroy]
   before_action :find_subscriptions_and_admin, only: [:show, :edit, :update]
-  before_action :find_users, only: [:new, :edit]
+  before_action :find_users, only: [:new, :edit, :update]
 
   def show
     @message = Message.new
-    @channel.messages.each { |message| message.update(done = true) }
     session[:user_ids] = [current_user.id]
   end
 
@@ -31,9 +30,10 @@ class ChannelsController < ApplicationController
   end
 
   def update
-    if !channel_params[:name].strip.empty? && @channel.update(channel_params)
+    if @channel.update(channel_params)
       redirect_to edit_channel_path(@channel)
     else
+
       render :edit
     end
   end

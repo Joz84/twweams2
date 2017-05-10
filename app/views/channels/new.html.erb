@@ -4,7 +4,7 @@
   <% if @selected_users.size > 2 %>
     <%= f.input :name, label: false, placeholder: "Name of the channel" %>
   <% else %>
-    <%= f.input :name, as: :hidden, input_html: {value: @selected_users.last.alias } %>
+    <%= f.input :name, as: :hidden %>
   <% end %>
   <div>
     <ul>

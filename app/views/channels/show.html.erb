@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-2">
         <p><%= link_to "Create a new channel", new_channel_path %></p>
-        <h3><%= @channel.name %></h3>
+        <h3><%= @channel.default_name(current_user) %></h3>
         <% if @admin %>
           <%= link_to "edit", edit_channel_path(@channel) %>
         <% end %>
@@ -16,7 +16,7 @@
         </ul>
         <ul>
           <% current_user.channels.each do |channel| %>
-            <li> <%= link_to channel.name, channel %></li>
+            <li> <%= link_to channel.default_name(current_user), channel %></li>
           <% end %>
         </ul>
       </div>
