@@ -24,4 +24,10 @@ class Channel < ApplicationRecord
     end
   end
 
+  def unread_messages_nbr(current_user)
+    subscription = Subscription.find_by(user: current_user, channel: self)
+    diff = subscription.count_unread
+    diff > 0 ? diff : nil
+  end
+
 end

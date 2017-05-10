@@ -32,4 +32,10 @@ class User < ApplicationRecord
     .reverse
   end
 
+  def total_unread_messages_nbr
+    total = 0
+    subscriptions.each { |s| total += s.count_unread }
+    total > 0 ? total : nil
+  end
+
 end
