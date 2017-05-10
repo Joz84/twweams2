@@ -4,6 +4,8 @@ class ChannelsController < ApplicationController
   before_action :find_users, only: [:new, :edit, :update]
 
   def show
+    @subscription = Subscription.find_by(user: current_user, channel: @channel)
+    @subscription.update( opened_messages: @channel.messages.count)
     @message = Message.new
     session[:user_ids] = [current_user.id]
   end

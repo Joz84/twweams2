@@ -16,5 +16,6 @@ u3 =  User.create(email: "c@gmail.com", password: "azerty", alias: "Charly")
 u4 =  User.create(email: "d@gmail.com", password: "azerty", alias: "Dude")
 
 c1 = Channel.create(name: "test")
-s11 = Subscription.create(user: u1, channel: c1)
-s21 = Subscription.create(user: u2, channel: c1)
+User.all.each do |user|
+  Subscription.create(user: user, channel: c1)
+end

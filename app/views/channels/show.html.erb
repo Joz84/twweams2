@@ -16,7 +16,15 @@
         </ul>
         <ul>
           <% current_user.channels.each do |channel| %>
-            <li> <%= link_to channel.default_name(current_user), channel %></li>
+            <li>
+              <% if channel.unread_messages_nbr(current_user) %>
+                <div class="unread">
+              <% else %>
+                <div>
+              <% end %>
+                <%= link_to channel.default_name(current_user), channel %>
+              </div>
+            </li>
           <% end %>
         </ul>
       </div>

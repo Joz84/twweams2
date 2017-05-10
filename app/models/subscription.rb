@@ -4,4 +4,8 @@ class Subscription < ApplicationRecord
 
   validates :channel, uniqueness: { scope: :user }
 
+  def count_unread
+    self.channel.messages.count - self.opened_messages
+  end
+
 end
