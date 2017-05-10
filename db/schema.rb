@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170420115154) do
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "channel_id"
     t.integer  "user_id"
+    t.boolean  "admin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["channel_id"], name: "index_subscriptions_on_channel_id", using: :btree
