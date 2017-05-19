@@ -47,7 +47,7 @@
 
         <form action="">
           <label> Message </label>
-          <input type="text" data-behavior="room_speaker" data-user="<%= current_user.id %>" data-channel="<%= @channel.id %>">
+          <input type="text" data-behavior="room_speaker">
         </form>
 
         <% simple_form_for @message, url: channel_messages_path(@channel) do |f| %>
