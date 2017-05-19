@@ -13,4 +13,6 @@ Rails.application.routes.draw do
   end
 
   delete 'delete-selected-user/:id', to: "channels#delete_selected_user", as: "delete_selected_user"
+
+  mount ActionCable.server => '/cable'
 end
