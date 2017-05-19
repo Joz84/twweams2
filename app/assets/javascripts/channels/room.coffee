@@ -11,3 +11,9 @@ App.room = App.cable.subscriptions.create "RoomChannel",
 
   speak: (message) ->
     @perform 'speak', {message: message}
+
+$('[data-behavior="room_speaker"]').on 'keypress', (e) ->
+  if e.keyCode is 13 # Return
+    App.room.speak e.target.value
+    e.target.value = ""
+    e.preventDefault()

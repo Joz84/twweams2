@@ -15,7 +15,6 @@ class MessagesController < ApplicationController
   end
 
   def delete
-    raise
   end
 
   private

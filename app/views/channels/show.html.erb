@@ -1,6 +1,7 @@
 <div class="wrapper-messenger">
   <div class="container-fluid">
     <div class="row">
+
       <div class="col-md-2">
         <p><%= link_to "Create a new channel", new_channel_path %></p>
         <h3><%= @channel.default_name(current_user) %></h3>
@@ -28,6 +29,7 @@
           <% end %>
         </ul>
       </div>
+
       <div class="col-md-10">
         <% if @channel.messages %>
           <ul>
@@ -42,11 +44,19 @@
             <% end %>
           </ul>
         <% end %>
-        <%= simple_form_for @message, url: channel_messages_path(@channel) do |f| %>
+
+        <form action="">
+          <label> Message </label>
+          <input type="text" data-behavior="room_speaker" data-user="<%= current_user.id %>" data-channel="<%= @channel.id %>">
+        </form>
+
+        <% simple_form_for @message, url: channel_messages_path(@channel) do |f| %>
           <%= f.input :content, label: false %>
           <%= f.button :submit, 'Send' %>
         <% end %>
+
       </div>
+
     </div>
   </div>
 </div>
