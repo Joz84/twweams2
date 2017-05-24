@@ -14,8 +14,11 @@ class MessagesController < ApplicationController
     end
   end
 
-  def delete
-    raise
+  def destroy
+    @channel = Channel.find(params[:channel_id])
+    @message = Message.find(params[:id])
+    @message.destroy
+    redirect_to @channel
   end
 
   private

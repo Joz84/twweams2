@@ -32,9 +32,14 @@ class User < ApplicationRecord
     .reverse
   end
 
+  def unread_messages_nbr(channel)
+    subscription = Subscription.find_by(user: self, channel: channel)
+    diff = subscription.new_messages
+    diff > 0 ? diff : nil
+  end
+
   def total_unread_messages_nbr
-    total = 0
-    subscriptions.each { |s| total += s.count_unread }
+    total = subscriptions.reduce(0){|sum, s| sum + s.new_messages}
     total > 0 ? total : nil
   end
 

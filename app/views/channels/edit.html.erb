@@ -7,69 +7,19 @@
 <% end %>
 <ul>
   <% @subscriptions.each do |subscription| %>
-    <% if subscription.user != current_user %>
+    <% if !current_user?(subscription.user) %>
       <li>
         <%= subscription.user.alias %>
         <% if @admin && @subscriptions.size > 2 %>
           <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=<%= "##{subscription.user.alias}" %> >
-            Delete
-          </button>
-
-          <!-- Modal -->
-          <div class="modal fade" id=<%= "#{subscription.user.alias}" %> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
-                </div>
-                <div class="modal-body">
-                  Are you sure! Do you want delete <%= subscription.user.alias %>
-                </div>
-                <div class="modal-footer">
-                  <%= link_to "delete", channel_subscription_path(@channel, subscription), method: :delete %>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
+          <%= link_to "delete", [@channel, subscription], method: :delete, data: {confirm: "Are you sure! Do you want delete #{subscription.user}"} %>
         <% end %>
       </li>
     <% end %>
   <% end %>
 </ul>
 
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-  Delete the channel <%= @channel.default_name(current_user) %>
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
-      </div>
-      <div class="modal-body">
-        Are you sure! Do you want delete the channel <%=  @channel.default_name(current_user) %>
-      </div>
-      <div class="modal-footer">
-        <%= link_to "delete the channel #{@channel.default_name(current_user)}", @channel, method: :delete  %>
-      </div>
-    </div>
-  </div>
-</div>
-
+<%= link_to "Delete the channel #{@channel.default_name(current_user)}", @channel, method: :delete, data: {confirm: "Are you sure! Do you want delete the channel #{@channel.default_name(current_user)}"}  %>
 
 <h2>Add a new friend to channel</h2>
 
@@ -94,3 +44,11 @@
     <% end %>
   </ul>
 </div>
+<!-- <a data-toggle="modal" href="/" data-target="#modal">Click me</a>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    </div>
+  </div>
+</div> -->

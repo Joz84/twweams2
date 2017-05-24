@@ -9,7 +9,7 @@
         <% end %>
         <ul>
           <% @subscriptions.each do |subscription| %>
-            <% if subscription.user != current_user %>
+            <% if !current_user?(subscription.user) %>
               <li><%= subscription.user.alias %></li>
             <% end %>
           <% end %>
@@ -17,7 +17,7 @@
         <ul>
           <% current_user.channels.each do |channel| %>
             <li>
-              <% if channel.unread_messages_nbr(current_user) %>
+              <% if current_user.unread_messages_nbr(channel) %>
                 <div class="unread">
               <% else %>
                 <div>
@@ -29,20 +29,21 @@
         </ul>
       </div>
       <div class="col-md-10">
-        <% if @channel.messages %>
-          <ul>
-            <% @channel.messages.each do |message| %>
-              <li>
-                <h1><%= message.user.alias %> </h1>
-                <p><%= message.content %></p>
-                <% if message.user == current_user %>
-                  <%= link_to "delete", "#"  %>
-                <% end %>
-              </li>
+        <ul>
+          <% @channel.messages.each_with_index do |message, index| %>
+            <% if index == @new_messages_limit %>
+              New message <hr>
             <% end %>
-          </ul>
-        <% end %>
-        <%= simple_form_for @message, url: channel_messages_path(@channel) do |f| %>
+            <li>
+              <h1><%= message.user.alias %> </h1>
+              <p><%= message.content %></p>
+              <% if current_user?(message.user) %>
+                <%= link_to "delete", [@channel, message], method: :delete, data: {confirm: "Are you sure! Do you want delete this post"}  %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+        <%= simple_form_for [@channel, @message] do |f| %>
           <%= f.input :content, label: false %>
           <%= f.button :submit, 'Send' %>
         <% end %>

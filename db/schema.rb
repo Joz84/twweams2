@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170510124637) do
+ActiveRecord::Schema.define(version: 20170420115154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,11 +37,12 @@ ActiveRecord::Schema.define(version: 20170510124637) do
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "channel_id"
     t.integer  "user_id"
+    t.integer  "message_id"
     t.boolean  "admin"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "opened_messages", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["channel_id"], name: "index_subscriptions_on_channel_id", using: :btree
+    t.index ["message_id"], name: "index_subscriptions_on_message_id", using: :btree
     t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
   end
 
@@ -66,5 +67,6 @@ ActiveRecord::Schema.define(version: 20170510124637) do
   add_foreign_key "messages", "channels"
   add_foreign_key "messages", "users"
   add_foreign_key "subscriptions", "channels"
+  add_foreign_key "subscriptions", "messages"
   add_foreign_key "subscriptions", "users"
 end
