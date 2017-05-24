@@ -29,3 +29,4 @@ group :development, :test do
 end
 
 gem 'pg_search'
+

@@ -1,15 +1,11 @@
 <h1>New channel</h1>
 
 <%= simple_form_for @channel do |f| %>
-  <% if @selected_users.size > 2 %>
-    <%= f.input :name, label: false, placeholder: "Name of the channel" %>
-  <% else %>
-    <%= f.input :name, as: :hidden %>
-  <% end %>
+  <%= f.input :name, label: false, placeholder: "Name of the channel" %>
   <div>
     <ul>
       <% @selected_users.each do |user| %>
-        <% if user != current_user %>
+        <% if !current_user?(user) %>
           <li>
             <%= user.alias %>
             <%= link_to "delete", delete_selected_user_path(user), method: :delete %>

@@ -4,7 +4,7 @@ class Channel < ApplicationRecord
   has_many :users, through: :subscriptions
 
   def one_to_one?
-    subscriptions.size == 2 && !name
+    name.empty? && subscriptions.size == 2
   end
 
   def init(selected_users, current_user)
@@ -15,19 +15,10 @@ class Channel < ApplicationRecord
   end
 
   def default_name(current_user)
-    if name && !name.strip.empty?
-      name
-    else
-      default_name = users.map(&:alias)
-      default_name.delete(current_user.alias)
-      default_name[0...2].join(", ")
-    end
-  end
-
-  def unread_messages_nbr(current_user)
-    subscription = Subscription.find_by(user: current_user, channel: self)
-    diff = subscription.count_unread
-    diff > 0 ? diff : nil
+    return name if name && !name.strip.empty?
+    default_name = users.map(&:alias)
+    default_name.delete(current_user.alias)
+    default_name[0...2].join(", ")
   end
 
 end
