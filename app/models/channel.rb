@@ -4,7 +4,7 @@ class Channel < ApplicationRecord
   has_many :users, through: :subscriptions
 
   def one_to_one?
-    !name && subscriptions.size == 2
+    name.empty? && subscriptions.size == 2
   end
 
   def init(selected_users, current_user)

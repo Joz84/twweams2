@@ -1,6 +1,7 @@
 class MessagesController < ApplicationController
+  before_action :find_channel, only: [:create, :destroy]
+
   def create
-    @channel = Channel.find(params[:channel_id])
     @message = Message.new( user: current_user,
                             channel: @channel,
                             content: message_params[:content]
@@ -15,13 +16,16 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    @channel = Channel.find(params[:channel_id])
     @message = Message.find(params[:id])
     @message.destroy
     redirect_to @channel
   end
 
   private
+
+  def find_channel
+    @channel = Channel.find(params[:channel_id])
+  end
 
   def message_params
     params.require(:message).permit(:content)

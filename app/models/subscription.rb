@@ -5,11 +5,11 @@ class Subscription < ApplicationRecord
   validates :channel, uniqueness: { scope: :user }
 
   def new_messages
-    last_message ? channel.messages.where("id > ?", last_message.id).count : 0
+    request_messages(">")
   end
 
   def opened_messages
-    last_message ? channel.messages.where("id <= ?", last_message.id).count : 0
+    request_messages("<=")
   end
 
   def new_messages_limit
@@ -24,7 +24,7 @@ class Subscription < ApplicationRecord
 
   def request_messages(sign)
     channel.messages
-           .where("id #{sign} ?", last_message)
+           .where("id #{sign} ?", (last_message ? last_message : 0))
            .count
   end
 
