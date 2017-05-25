@@ -8,6 +8,10 @@ class ChannelsController < ApplicationController
     @subscription.update( opened_messages: @channel.messages.count)
     @message = Message.new
     session[:user_ids] = [current_user.id]
+
+    # Temporary
+    cookies.signed[:user_id] = current_user.id
+    cookies.signed[:channel_id] = params[:id]
   end
 
   def new
