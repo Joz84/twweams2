@@ -8,7 +8,6 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def speak data
-    p session[:user_ids]
     ActionCable.server.broadcast 'room_channel', {message: data['message']}
     Message.create content: data['message']#, user_id: cookies.signed[:user_id], channel_id: cookies.signed[:channel_id])
   end
