@@ -10,9 +10,9 @@ App.room = App.cable.subscriptions.create "RoomChannel",
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
     console.log data
-    console
 
   speak: (input) ->
+    # Triggered when App.room.speak is called
     @perform 'speak', {message: input}
 
 $('input[data-behavior="room_speaker"]').on 'keypress', (e) ->
