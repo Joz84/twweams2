@@ -9,6 +9,6 @@ class RoomChannel < ApplicationCable::Channel
 
   def speak data
     ActionCable.server.broadcast 'room_channel', {message: data['message']}
-    Message.create content: data['message']#, user_id: cookies.signed[:user_id], channel_id: cookies.signed[:channel_id])
+    Message.create content: data['message'], user_id: current_user.id, channel_id: current_channel.id
   end
 end
