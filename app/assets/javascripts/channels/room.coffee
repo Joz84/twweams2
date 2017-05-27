@@ -9,14 +9,27 @@ App.room = App.cable.subscriptions.create "RoomChannel",
 
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
-    console.log data
+    messages = $('.messages-container')
+    messages.append(data)
+    scroll_bottom(messages)
 
-  speak: (input) ->
+  speak: (data) ->
     # Triggered when App.room.speak is called
-    @perform 'speak', {message: input}
+    @perform 'speak', {message: data}
 
+
+# When return is pressed, the speak function is called and the data is sent to back-end.
 $('input[data-behavior="room_speaker"]').on 'keypress', (e) ->
-  if e.keyCode is 13 # Return key
+  if e.keyCode is 13
     App.room.speak e.target.value
     e.target.value = ""
     e.preventDefault()
+
+
+# Function for auto scroll-down
+scroll_bottom = (element) ->
+  $('body').animate({scrollTop: $(element).height()}, 300);
+
+# Auto-scroll down when loaded
+$(document).one 'DOMContentLoaded', ->
+  scroll_bottom( $('.messages-container') )

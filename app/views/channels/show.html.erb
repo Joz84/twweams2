@@ -31,29 +31,21 @@
       </div>
 
       <div class="col-md-10">
-        <% if @channel.messages %>
-          <ul>
+
+        <div class="messages-container">
+          <% if @channel.messages %>
             <% @channel.messages.each do |message| %>
-              <li>
-                <h1><%= message.user.alias %> </h1>
-                <p><%= message.content %></p>
-                <% if message.user == current_user %>
-                  <%= link_to "delete", "#"  %>
-                <% end %>
-              </li>
+              <%= render 'messages/shared/message', message: message %>
             <% end %>
-          </ul>
-        <% end %>
+          <% end %>
+        </div>
+
+        <br>
 
         <form action="">
           <label> Message </label>
           <input type="text" data-behavior="room_speaker">
         </form>
-
-        <% simple_form_for @message, url: channel_messages_path(@channel) do |f| %>
-          <%= f.input :content, label: false %>
-          <%= f.button :submit, 'Send' %>
-        <% end %>
 
       </div>
 

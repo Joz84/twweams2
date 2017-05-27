@@ -19,7 +19,8 @@ module ApplicationCable
     end
 
     def find_current_channel
-      if connected_channel = Channel.find_by(id: cookies.signed[:channel_id])
+      # Tried to connect from ApplicationCable::Channel if not explicitely specified
+      if connected_channel = ApplicationRecord::Channel.find_by(id: cookies.signed[:channel_id])
         connected_channel
       else
         reject_unauthorized_connection

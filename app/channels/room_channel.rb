@@ -1,6 +1,6 @@
 class RoomChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "room_channel"
+    stream_from "room_channel_#{current_channel.id}"
   end
 
   def unsubscribed
@@ -8,7 +8,8 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def speak data
-    ActionCable.server.broadcast 'room_channel', {message: data['message']}
-    Message.create content: data['message'], user_id: current_user.id, channel_id: current_channel.id
+    # data is a hash here, serialized from a JSON coming from the view.
+    p data
+    Message.create(content: data['message'], user_id: current_user.id, channel_id: current_channel.id)
   end
 end
