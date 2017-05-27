@@ -1,11 +1,13 @@
 class ChannelsController < ApplicationController
-  before_action :find_channel, only: [:show, :edit, :update, :destroy]
-  before_action :find_subscriptions_and_admin, only: [:show, :edit, :update]
-  before_action :find_users, only: [:new, :edit, :update]
+  before_action :find_channel, only:        [:show, :edit, :update, :destroy]
+  before_action :find_subscriptions, only:  [:show, :edit, :update]
+  before_action :find_admin, only:          [:show, :edit, :update]
+  before_action :find_users, only:          [:new,  :edit, :update]
 
   def show
     @subscription = Subscription.find_by(user: current_user, channel: @channel)
-    @subscription.update( opened_messages: @channel.messages.count)
+    @new_messages_limit = @subscription.new_messages_limit
+    @subscription.update( last_message: @channel.messages.last)
     @message = Message.new
     session[:user_ids] = [current_user.id]
 
@@ -60,8 +62,11 @@ class ChannelsController < ApplicationController
     @channel = Channel.find(params[:id])
   end
 
-  def find_subscriptions_and_admin
+  def find_subscriptions
     @subscriptions = !@channel.one_to_one? ? @channel.subscriptions : []
+  end
+
+  def find_admin
     @admin = @channel.subscriptions.find_by(user: current_user).admin
   end
 

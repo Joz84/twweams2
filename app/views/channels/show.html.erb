@@ -10,7 +10,7 @@
         <% end %>
         <ul>
           <% @subscriptions.each do |subscription| %>
-            <% if subscription.user != current_user %>
+            <% if !current_user?(subscription.user) %>
               <li><%= subscription.user.alias %></li>
             <% end %>
           <% end %>
@@ -18,7 +18,7 @@
         <ul>
           <% current_user.channels.each do |channel| %>
             <li>
-              <% if channel.unread_messages_nbr(current_user) %>
+              <% if current_user.unread_messages_nbr(channel) %>
                 <div class="unread">
               <% else %>
                 <div>
@@ -31,7 +31,6 @@
       </div>
 
       <div class="col-md-10">
-
         <div class="messages-container">
           <% if @channel.messages %>
             <% @channel.messages.each do |message| %>
@@ -46,7 +45,6 @@
           <label> Message </label>
           <input type="text" data-behavior="room_speaker">
         </form>
-
       </div>
 
     </div>
