@@ -30,6 +30,6 @@ $('input[data-behavior="room_speaker"]').on 'keypress', (e) ->
 scroll_bottom = (element) ->
   $('body').animate({scrollTop: $(element).height()}, 300);
 
-# Auto-scroll down when loaded
+# Auto-scrolling to bottom when page is loaded
 $(document).one 'DOMContentLoaded', ->
   scroll_bottom( $('.messages-container') )
