@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 20170420115154) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "alias"
+    t.integer  "channel_id"
+    t.index ["channel_id"], name: "index_users_on_channel_id", using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
@@ -69,4 +71,5 @@ ActiveRecord::Schema.define(version: 20170420115154) do
   add_foreign_key "subscriptions", "channels"
   add_foreign_key "subscriptions", "messages"
   add_foreign_key "subscriptions", "users"
+  add_foreign_key "users", "channels"
 end
