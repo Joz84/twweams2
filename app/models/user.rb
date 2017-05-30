@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :channels, through: :subscriptions
   has_many :users, through: :channels
+  belongs_to :last_channel, class_name: :Channel, foreign_key: "channel_id"
 
   validates :alias, presence: true
   validates :alias, uniqueness: true

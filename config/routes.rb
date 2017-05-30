@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'subscriptions/create'
-
-  get 'subscriptions/destroy'
-
   devise_for :users
   root to: 'pages#home'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
@@ -12,6 +8,7 @@ Rails.application.routes.draw do
     resources :messages, only: [:create, :destroy]
   end
 
+  get 'first-connection', to: "channels#first_connection"
   delete 'delete-selected-user/:id', to: "channels#delete_selected_user", as: "delete_selected_user"
 
   mount ActionCable.server => '/cable'
