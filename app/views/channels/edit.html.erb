@@ -1,9 +1,9 @@
 <h3><%= link_to @channel.default_name(current_user), @channel %></h3>
-<% unless @channel.one_to_one? %>
   <%= simple_form_for @channel do |f| %>
     <%= f.input :name, label: false, placeholder: @channel.name %>
     <%= f.submit "change the name" %>
   <% end %>
+<% unless @channel.one_to_one? %>
   <ul>
     <% @subscriptions.each do |subscription| %>
       <% if !current_user?(subscription.user) %>
