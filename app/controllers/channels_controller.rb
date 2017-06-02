@@ -11,6 +11,10 @@ class ChannelsController < ApplicationController
     @message = Message.new
     session[:user_ids] = [current_user.id]
     current_user.update(last_channel: @channel)
+
+    # IMPORTANT. This is essential for the websocket authentification !!! :)
+    cookies.signed[:user_id] = current_user.id
+    cookies.signed[:channel_id] = params[:id]
   end
 
   def new

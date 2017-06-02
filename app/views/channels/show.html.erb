@@ -1,6 +1,7 @@
 <div class="wrapper-messenger">
   <div class="container-fluid">
     <div class="row">
+
       <div class="col-md-2">
         <p><%= link_to "Create a new channel", new_channel_path %></p>
         <h3><%= @channel.default_name(current_user) %></h3>
@@ -28,26 +29,24 @@
           <% end %>
         </ul>
       </div>
+
       <div class="col-md-10">
-        <ul>
-          <% @channel.messages.each_with_index do |message, index| %>
-            <% if index == @new_messages_limit %>
-              New message <hr>
+        <div class="messages-container">
+          <% if @channel.messages %>
+            <% @channel.messages.each do |message| %>
+              <%= render 'messages/shared/message', message: message %>
             <% end %>
-            <li>
-              <h1><%= message.user.alias %> </h1>
-              <p><%= message.content %></p>
-              <% if current_user?(message.user) %>
-                <%= link_to "delete", [@channel, message], method: :delete, data: {confirm: "Are you sure! Do you want delete this post"}  %>
-              <% end %>
-            </li>
           <% end %>
-        </ul>
-        <%= simple_form_for [@channel, @message] do |f| %>
-          <%= f.input :content, label: false %>
-          <%= f.button :submit, 'Send' %>
-        <% end %>
+        </div>
+
+        <br>
+
+        <form action="">
+          <label> Message </label>
+          <input type="text" data-behavior="room_speaker">
+        </form>
       </div>
+
     </div>
   </div>
 </div>
